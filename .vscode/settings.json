@@ -1,6 +1,6 @@
 {
     "python.pythonPath": "/usr/local/bin/python",
-    "python.analysis.extraPaths": ["./cameras", "./utils", "./objects","./tests","./examples","./includes"],
+    "python.analysis.extraPaths": ["./cameras", "./utils", "./objects","./tests","./examples","./includes","./"],
     "python.languageServer": "Pylance",
     "python.testing.unittestArgs": [
         "-v",

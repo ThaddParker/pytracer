@@ -3,7 +3,7 @@ from utils.vector import Vector
 from utils.matrix import Transform
 import numpy as np
 
-class Test_Transform(unittest.TestCase):
+class Test_TransformTestCase(unittest.TestCase):
 
     def test_compute_rotation_transform(self):
         vec = Vector(1,2,3)
