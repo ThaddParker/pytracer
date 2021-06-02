@@ -67,10 +67,11 @@ class Vector():
     
     def __abs__(self):
         return Vector(np.abs(self.x), np.abs(self.y), np.abs(self.z))
-    
+        
+    @staticmethod
     def real(v):
         return Vector(np.real(v.x), np.real(v.y), np.real(v.z))
-    
+    @staticmethod
     def imag(v):
         return Vector(np.imag(v.x), np.imag(v.y), np.imag(v.z))  
 
@@ -80,8 +81,6 @@ class Vector():
         return Vector(self.x, self.y, self.z)
     def zxy(self):
         return Vector(self.z, self.x, self.y)
-    def xyz(self):
-        return Vector(self.x, self.y, self.z)  
 
 
     def average(self):
@@ -101,10 +100,10 @@ class Vector():
     
     def dot(self, v):
         return self.x*v.x + self.y*v.y + self.z*v.z
-    
+    @staticmethod
     def exp(v):
         return Vector(np.exp(v.x) , np.exp(v.y) ,np.exp(v.z))
-    
+    @staticmethod
     def sqrt(v):
         return Vector(np.sqrt(v.x) , np.sqrt(v.y) ,np.sqrt(v.z)) 
     
@@ -133,12 +132,12 @@ class Vector():
         return Vector(extract(cond, self.x),
                     extract(cond, self.y),
                     extract(cond, self.z))
-
+    @staticmethod
     def where(cond, out_true, out_false):
         return Vector(np.where(cond, out_true.x, out_false.x),
                     np.where(cond, out_true.y, out_false.y),
                     np.where(cond, out_true.z, out_false.z))
-
+    @staticmethod
     def select(mask_list, out_list):
         out_list_x = [i.x for i in out_list]
         out_list_y = [i.y for i in out_list]

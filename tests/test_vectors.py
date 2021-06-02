@@ -1,14 +1,17 @@
 import unittest
-from vectormath import Vector3
+from utils.vector import Vector
 
 
-class TestVectors(unittest.TestCase):
+class Test_VectorsTestCase(unittest.TestCase):
     def setUp(self):
-        self.v1 = Vector3(1.0, -2.0, -2.0)
-        self.v2 = Vector3(3.0, 6.0, 9.0)
+        self.v1 = Vector(1.0, -2.0, -2.0)
+        self.v2 = Vector(3.0, 6.0, 9.0)
 
     def test_magnitude(self):
-        self.assertEqual(self.v1.magnitude(), 3)
+        self.assertEqual(self.v1.length(), 3)
+        
+    def test_lengthsqr(self):
+        self.assertEqual(self.v1.square_length(), 9)
 
     def test_addition(self):
         sum = self.v1 + self.v2

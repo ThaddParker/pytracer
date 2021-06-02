@@ -34,6 +34,7 @@
 from math import sqrt
 import math
 from material import Material
+from matrix import Transform
 from ray import Ray
 import numpy as np
 from utils.vector import Vector
@@ -42,11 +43,12 @@ from utils.boundingbox import BoundingBox
 class Sphere:
     """Sphere is the only 3D shape implemented. Has center, radius and material"""
 
-    def __init__(self, center: Vector, radius, material: Material):
+    def __init__(self, center: Vector, radius, material: Material,do_ellipsoid=False):
         self.center = center
         self.radius = radius
         self.material = material
-        self.transform = None
+        self.transform_matrix = None
+        self.do_ellispoid = do_ellipsoid
 
     def intersects(self, ray: Ray):
         """Checks if ray intersects this sphere. Returns distance to intersection or None if there is no intersection"""
@@ -62,17 +64,49 @@ class Sphere:
 
     def normal(self, ipoint:Vector):
         """Returns surface normal to the point on sphere's surface"""
-        return (ipoint - self.center) * (1./self.radius)
+        if self.do_ellispoid:
+            newpoint = self.transform_matrix.inverse_transform_point(ipoint)
+            result = newpoint
+            result = self.transform_matrix.transform_normal(result)
+            result = result.normalize()
+        else:
+            result = (ipoint - self.center) * (1./self.radius)
+        return result
 
     def inside(self, ipoint):
-        origin_to_center = self.center - ipoint
-        ocsqr = origin_to_center.length()**2
-        return ocsqr < self.radius**2
+        if self.do_ellispoid:
+            newpoint = self.transform_matrix.invervse_transform_point(ipoint)
+            ocsqr = newpoint.square_length()
+            return ocsqr < (self.radius**2)
+        else:
+            origin_to_center = self.center - ipoint
+            ocsqr = origin_to_center.length()**2
+            return ocsqr < self.radius**2
 
     def translate(self, vector):
-        self.center += vector
-        self.compute_bounding_box()
+        if self.do_ellispoid:
+            self.transform()
 
+        else:
+
+          self.center += vector
+          self.compute_bounding_box()
+
+    def transform(self):
+        if not self.do_ellispoid:
+            self.do_ellispoid = True
+            if self.transform_matrix is None:
+                self.transform_matrix = Transform()
+            temp = Transform()
+            temp = Transform.compute_scaling_transform(Vector(self.radius, self.radius,self.radius))
+            self.transform_matrix = Transform.compose_transforms(self.transform_matrix,temp)
+            self.radius = 1.
+            temp = Transform.compute_translation_transform(self.center)
+            self.transform_matrix = Transform.compose_transforms(self.transform_matrix, temp)
+            self.center = Vector(0.,0.,0.)
+        self.transform_matrix = Transform.compose_transforms(self.transform_matrix)
+        self.compute_bounding_box()
+    
     def scale(self, vector):
         self.center *= vector.x
         self.radius *= math.fabs(vector.x)
@@ -93,15 +127,24 @@ class Sphere:
     def intersect_bounding_box(self):
         return True
 
-    def rotate(self, θ, u):
-        u = u.normalize()
-        θ = θ/180 *np.pi 
-        cosθ = np.cos(θ)
-        sinθ = np.sqrt(1-cosθ**2) * np.sign(θ)
+    def rotate(self, trans):
+        if self.do_ellispoid:
+            self.transform()
+        else:
+            if self.transform_matrix is None:
+                self.transform_matrix = Transform()
+            self.transform_matrix = Transform.compose_transforms(self.transform_matrix,trans)
+            self.center = Transform.transform_point(self.center)
+            self.compute_bounding_box()
+
+        # u = u.normalize()
+        # θ = θ/180 *np.pi 
+        # cosθ = np.cos(θ)
+        # sinθ = np.sqrt(1-cosθ**2) * np.sign(θ)
         
-        #rotation matrix along u axis
-        M = np.array([
-                       [cosθ + u.x*u.x * (1-cosθ),      u.x*u.y*(1-cosθ) - u.z*sinθ,         u.x*u.z*(1-cosθ) +u.y*sinθ],
-                       [u.y*u.x*(1-cosθ) + u.z*sinθ,        cosθ + u.y**2 * (1-cosθ),       u.y*u.z*(1-cosθ) -u.x*sinθ],
-                       [u.z*u.x*(1-cosθ) -u.y*sinθ,             u.z*u.y*(1-cosθ) + u.x*sinθ,         cosθ + u.z*u.z*(1-cosθ)]
-                      ])
+        # #rotation matrix along u axis
+        # M = np.array([
+        #                [cosθ + u.x*u.x * (1-cosθ),      u.x*u.y*(1-cosθ) - u.z*sinθ,         u.x*u.z*(1-cosθ) +u.y*sinθ],
+        #                [u.y*u.x*(1-cosθ) + u.z*sinθ,        cosθ + u.y**2 * (1-cosθ),       u.y*u.z*(1-cosθ) -u.x*sinθ],
+        #                [u.z*u.x*(1-cosθ) -u.y*sinθ,             u.z*u.y*(1-cosθ) + u.x*sinθ,         cosθ + u.z*u.z*(1-cosθ)]
+        #               ])

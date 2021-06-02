@@ -31,7 +31,7 @@
 		"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
 		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
 		,"python.languageServer": "Pylance"
-		,"python.analysis.extraPaths": ["./cameras", "./utils", "./objects","./tests","./examples","./includes",]
+		,"python.analysis.extraPaths": ["./cameras", "./utils", "./objects","./tests","./examples","./includes","."]
 		,"python.analysis.diagnosticMode": "workspace"
 
 	},

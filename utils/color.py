@@ -24,16 +24,19 @@ class Color:
             return Color(self.red + v.red, self.green + v.green, self.blue + v.blue)
         elif isinstance(v, numbers.Number) or isinstance(v, np.ndarray):
             return Color(self.red + v, self.green + v, self.blue + v)
+    
     def __radd__(self, v):
         if isinstance(v, Color):
             return Color(self.red + v.red, self.green + v.green, self.blue + v.blue)
         elif isinstance(v, numbers.Number) or isinstance(v, np.ndarray):
             return Color(self.red + v, self.green + v, self.blue + v)
+    
     def __sub__(self, v):
         if isinstance(v, Color):
             return Color(self.red - v.red, self.green - v.green, self.blue - v.blue)
         elif isinstance(v, numbers.Number) or isinstance(v, np.ndarray):
             return Color(self.red - v, self.green - v, self.blue - v)
+    
     def __rsub__(self, v):
         if isinstance(v, Color):
             return Color(v.red - self.red, v.green - self.green ,  v.blue - self.blue)
@@ -45,11 +48,13 @@ class Color:
             return Color(self.red * v.red , self.green *  v.green , self.blue * v.blue )
         elif isinstance(v, numbers.Number) or isinstance(v, np.ndarray):
             return Color(self.red * v, self.green * v, self.blue * v) 
+    
     def __rmul__(self, v):
         if isinstance(v, Color):
             return Color(v.red *self.red  , v.green * self.green, v.blue * self.blue )
         elif isinstance(v, numbers.Number) or isinstance(v, np.ndarray):
             return Color(v *self.red  , v * self.green, v * self.blue ) 
+    
     def __truediv__(self, v):
         if isinstance(v, Color):
             return Color(self.red / v.red , self.green /  v.green , self.blue / v.blue )
@@ -68,9 +73,11 @@ class Color:
     def __abs__(self):
         return Color(np.abs(self.red), np.abs(self.green), np.abs(self.blue))
     
+    @staticmethod
     def real(v):
         return Color(np.real(v.red), np.real(v.green), np.real(v.blue))
     
+    @staticmethod
     def imag(v):
         return Color(np.imag(v.red), np.imag(v.green), np.imag(v.blue))  
 
@@ -78,20 +85,18 @@ class Color:
         return Color(self.green, self.blue, self.red)  
     def xyz(self):
         return Color(self.red, self.green, self.blue)
+    
     def zxy(self):
         return Color(self.blue, self.red, self.green)
-    def xyz(self):
-        return Color(self.red, self.green, self.blue)  
-
 
     def average(self):
         return (self.red + self.green +  self.blue)/3
     
     def matmul(self, matrix):
         if isinstance(self.red, numbers.Number):
-            return array_to_vec3(np.dot(matrix,self.to_array()))
+            return self.array_to_vec3(np.dot(matrix,self.to_array()))
         elif isinstance(self.red, np.ndarray):
-            return array_to_vec3(np.tensordot(matrix,self.to_array() , axes=([1,0])))
+            return self.array_to_vec3(np.tensordot(matrix,self.to_array() , axes=([1,0])))
 
     def change_basis(self, new_basis):
         return Color(self.dot(new_basis[0]),  self.dot(new_basis[1]),   self.dot(new_basis[2]))
@@ -101,10 +106,10 @@ class Color:
     
     def dot(self, v):
         return self.red*v.x + self.green*v.y + self.blue*v.z
-    
+    @staticmethod
     def exp(v):
         return Color(np.exp(v.red) , np.exp(v.green) ,np.exp(v.blue))
-    
+    @staticmethod
     def sqrt(v):
         return Color(np.sqrt(v.red) , np.sqrt(v.green) ,np.sqrt(v.blue)) 
     
