@@ -1,8 +1,9 @@
+from utils.color import Colors
 class Image:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pixels = [[None for _ in range(width)] for _ in range(height)]
+        self.pixels = [[Colors.Black for _ in range(width)] for _ in range(height)]
 
     def set_pixel(self, x, y, col):
         self.pixels[y][x] = col
@@ -24,7 +25,7 @@ class Image:
             for color in row:
                 img_fileobj.write(
                     "{} {} {} ".format(
-                        to_byte(color.x), to_byte(color.y), to_byte(color.z)
+                        to_byte(color.red), to_byte(color.green), to_byte(color.blue)
                     )
                 )
             img_fileobj.write("\n")

@@ -21,6 +21,14 @@ class Test_VectorsTestCase(unittest.TestCase):
         sum = self.v1 * 2
         self.assertEqual(getattr(sum, "x"), 2.0)
 
+    def test_getitem(self):
+        v = self.v1[0]
+        self.assertEqual(v, 1.)
+
+    def test_setitem(self):
+        self.v1[0] += 1.
+        self.assertEqual(getattr(self.v1,"x"),2.)
+
 
 if __name__ == "__main__":
     unittest.main()
