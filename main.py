@@ -37,49 +37,15 @@ def main1():
         engine.render_multiprocess(scene, process_count, img_fileobj)
 
 def main():
-    settings = Settings()
+    settings = Settings(samples=10)
     camera = Camera()
     objs = [Sphere(Vector(0, 0, -1), 0.5, Material(Colors.Red))]
-    scene = Scene(None,camera,objs,None)
+    scene = Scene(settings,camera,None,None)
 
-    def ray_color(ray, obj):
 
-        found, isect = obj.intersects(ray)
-        if found:
-            target = isect.point + isect.normal + Vector.random_in_unit_sphere()
-            color = isect.object.material.color
-            n = isect.normal
-            return 0.5 * (ray_color(Ray(isect.point, target - isect.point), obj))
-            # return sphere.material.color
-
-        # background (could be a gradient map on the -Y axis
-        norm = ray.direction.normalize()
-        t = 0.5 * (norm.y - 1)
-        return (1.-t)*Color(1.,1.,1.) + t*Color(0.5,0.7,1.)
-
-    aspect_ratio = 16. / 9.
-    image_width = 400
-    image_height = int(image_width / aspect_ratio)
-    samples_per_pixel = 10
 
     #render
-    image = Image(image_width, image_height)
-    for j in range(image_height):
-        print("Scan lines left: " + str(j),end="\r")
-        for i in range(image_width):
-
-            pixel_color = Color(0,0,0)
-            for s in range(samples_per_pixel):
-                u = float(i + random.random()) / (image_width)
-                v = float(j+ random.random()) / (image_height)
-                ray = camera.create_camera_ray(u, v)
-                pixel_color += ray_color(ray, sphere)
-            image.set_pixel(i, j, pixel_color)
-            print("{:3.0f}%".format(float(j) / float(image_height) * 100), end="\r")
-
-    print("Done...")
-    with open("test.ppm", "w") as img_file:
-        image.write_ppm(img_file)
+    scene.render()
 
 
 if __name__ == "__main__":

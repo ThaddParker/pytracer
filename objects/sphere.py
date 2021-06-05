@@ -64,17 +64,16 @@ class Sphere:
         disc = half_b**2 - a*c
         if disc < 0.:
             return False, None
-        if disc > 0.:
-            root = (-half_b - math.sqrt(disc)) / a
-            if root < MAX_DISTANCE  and root > DEPTH_TOLERANCE:
-                isect = Intersection(ray, ray.evaluate(root), root, (ray.evaluate(root)- self.center)/self.radius, self)
-                return True, isect
-            root = (-half_b + math.sqrt(disc)) / a
-            if root < MAX_DISTANCE and root > DEPTH_TOLERANCE:
-                isect = Intersection(ray=ray, distance=root,ipoint=ray.evaluate(root),normal=(ray.evaluate(root)-self.center)/self.radius,object=self)
-                return True, isect
+        sqrtd = math.sqrt(disc)
+        root = (-half_b - sqrtd) / a
+        if root < DEPTH_TOLERANCE  or MAX_DISTANCE < root:
+            root = (-half_b + sqrtd) / a
+            if root < DEPTH_TOLERANCE or DEPTH_TOLERANCE < root:
+                return False, None
 
-        return False, None
+        isect = Intersection(ray=ray, distance=root,ipoint=ray.evaluate(root),
+                             normal=(ray.evaluate(root)-self.center)/self.radius,obj=self)
+        return True, isect
 
 
         # b = 2 * np.dot(ray.direction.to_array(), (ray.origin - self.center).to_array())

@@ -4,10 +4,18 @@ Global functions
 import math
 import numpy as np
 
+
 def clamp(x, _min_, _max_):
-    if x < _min_: return _min_
-    if x > _max_: return _max_
+    if x < _min_:
+        return _min_
+    if x > _max_:
+        return _max_
     return x
+
+
+def degrees_to_radians(degrees):
+    return degrees * math.pi / 180.
+
 
 def fresnel_r(cos_ti, n):
     """
@@ -55,4 +63,3 @@ def compute_fresnel(reflective_color, reflection_max, reflection_min, cos_angle,
     f = fresnel_r(cos_angle, ior)
     reflective_color = f * reflection_max + (1. - f) * reflection_min
     return reflective_color
-
