@@ -97,11 +97,6 @@ class Color:
     def components(self):
         return self.red, self.green, self.blue
 
-    def extract(self, cond):
-        return Color(extract(cond, self.red),
-                     extract(cond, self.green),
-                     extract(cond, self.blue))
-
     @staticmethod
     def where(cond, out_true, out_false):
         return Color(np.where(cond, out_true.red, out_false.red),

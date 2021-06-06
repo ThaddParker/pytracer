@@ -1,5 +1,5 @@
 from utils.vector import Vector
-from includes.consts import *
+from includes.consts import Constants as consts
 
 
 class BoundingBox:
@@ -46,8 +46,8 @@ class BoundingBox:
             return
         lleft = self.lower_left
         lens = self.size
-        mins = Vector(BOUND_HUGE, BOUND_HUGE, BOUND_HUGE)
-        maxs = Vector(-BOUND_HUGE, -BOUND_HUGE, -BOUND_HUGE)
+        mins = Vector(consts.BOUND_HUGE, consts.BOUND_HUGE, consts.BOUND_HUGE)
+        maxs = Vector(-consts.BOUND_HUGE, -consts.BOUND_HUGE, -consts.BOUND_HUGE)
 
         for i in range(1, 8):
             corner = lleft
@@ -71,18 +71,18 @@ class BoundingBox:
                 maxs.z = corner.z
 
         # clip bounding box
-        if mins.x < -BOUND_HUGE / 2.:
-            mins.x = -BOUND_HUGE / 2.
-        if mins.y < -BOUND_HUGE / 2.:
-            mins.y = -BOUND_HUGE / 2.
-        if mins.z < -BOUND_HUGE / 2.:
-            mins.z = -BOUND_HUGE / 2.
-        if maxs.x > BOUND_HUGE / 2.:
-            maxs.x = BOUND_HUGE / 2.
-        if maxs.y > BOUND_HUGE / 2.:
-            maxs.y = BOUND_HUGE / 2.
-        if maxs.z > BOUND_HUGE / 2.:
-            maxs.z = BOUND_HUGE / 2.
+        if mins.x < -consts.OUND_HUGE / 2.:
+            mins.x = -consts.BOUND_HUGE / 2.
+        if mins.y < -consts.BOUND_HUGE / 2.:
+            mins.y = -consts.BOUND_HUGE / 2.
+        if mins.z < -consts.BOUND_HUGE / 2.:
+            mins.z = -consts.BOUND_HUGE / 2.
+        if maxs.x > consts.BOUND_HUGE / 2.:
+            maxs.x = consts.BOUND_HUGE / 2.
+        if maxs.y > consts.BOUND_HUGE / 2.:
+            maxs.y = consts.BOUND_HUGE / 2.
+        if maxs.z > consts.BOUND_HUGE / 2.:
+            maxs.z = consts.BOUND_HUGE / 2.
 
         self.lower_left = mins
         self.size = maxs - mins

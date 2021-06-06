@@ -2,7 +2,18 @@
 Global functions
 """
 import math
+import random
 import numpy as np
+
+
+
+def random_double():
+    r = np.random.MT19937(555)
+    g = np.random.Generator(r)
+    return g.uniform()
+
+def random_doubleminmax(_min_, _max_):
+    return _min_ + (_max_ - _min_) *random_double()
 
 
 def clamp(x, _min_, _max_):
@@ -11,6 +22,7 @@ def clamp(x, _min_, _max_):
     if x > _max_:
         return _max_
     return x
+
 
 
 def degrees_to_radians(degrees):

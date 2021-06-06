@@ -27,5 +27,10 @@ class Intersection:
         self.distance = distance
         self.normal = normal
         self.object = obj
-        front_face = ray.direction.dot(normal) < 0.
-        self.face_normal = normal if front_face else -normal
+        self.front_face = False
+        # self.face_normal = normal if front_face else -normal
+
+    def set_face_normal(self, ray, outward_normal):
+        self.front_face = ray.direction.dot(outward_normal) < 0.
+        self.normal = outward_normal if self.front_face else -outward_normal
+        

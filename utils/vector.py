@@ -1,7 +1,10 @@
+import math
 from random import  uniform
 
 import numpy as np
 import numbers
+
+from utils.funcs import random_doubleminmax
 
 
 def extract(cond, x):
@@ -117,6 +120,10 @@ class Vector:
     def average(self):
         return (self.x + self.y + self.z) / 3
 
+    def near_zero(self):
+        s = 1e-8
+        return (math.fabs(self.x) and math.fabs(self.y) and math.fabs(self.z)) < s
+
     def matmul(self, matrix):
         if isinstance(self.x, numbers.Number):
             return array_to_vec3(np.dot(matrix, self.to_array()))
@@ -162,15 +169,18 @@ class Vector:
 
     @staticmethod
     def random(_min_=0.,_max_=1.):
-        return Vector(uniform(_min_, _max_),uniform(_min_,_max_),uniform(_min_,_max_))
+        return Vector(random_doubleminmax(_min_, _max_),random_doubleminmax(_min_,_max_),random_doubleminmax(_min_,_max_))
 
     @staticmethod
     def random_in_unit_sphere():
         while True:
             p = Vector.random(-1,1)
-            if p.square_length() >= 1:
+            if p.square_length() >= 1.:
                 continue
             return p
+    @staticmethod
+    def random_unit_vector():
+        return Vector.random_in_unit_sphere().normalize()
 
     def extract(self, cond):
         return Vector(extract(cond, self.x),

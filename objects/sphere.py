@@ -31,7 +31,6 @@
 #  furnished to do so, subject to the following conditions:
 #
 #
-from math import sqrt
 import math
 from material import Material
 from utils.intersection import Intersection
@@ -40,7 +39,7 @@ from ray import Ray
 import numpy as np
 from utils.vector import Vector
 from utils.boundingbox import BoundingBox
-from includes.consts import *
+from includes.consts import Constants as consts
 
 class Sphere:
     """Sphere is the only 3D shape implemented. Has center, radius and material"""
@@ -53,7 +52,7 @@ class Sphere:
         self.do_ellipsoid = do_ellipsoid  # used only for spatial
         self.bounding_box = BoundingBox()
 
-    def intersects(self, ray: Ray):
+    def intersects(self, ray: Ray, min_dist=0.0001, max_dist= consts.MAX_DISTANCE):
         """Checks if ray intersects this sphere. Returns distance to intersection or None if there is no intersection"""
         oc = ray.origin - self.center
         a = ray.direction.square_length()
@@ -66,13 +65,16 @@ class Sphere:
             return False, None
         sqrtd = math.sqrt(disc)
         root = (-half_b - sqrtd) / a
-        if root < DEPTH_TOLERANCE  or MAX_DISTANCE < root:
+        if root < min_dist  or max_dist < root:
             root = (-half_b + sqrtd) / a
-            if root < DEPTH_TOLERANCE or DEPTH_TOLERANCE < root:
+            if root < min_dist or max_dist < root:
                 return False, None
+        dist = root
+        point = ray.evaluate(dist)
+        outward_normal = (point - self.center) / self.radius
+        isect = Intersection(ray,point,dist,outward_normal, self)
+        isect.set_face_normal(ray, outward_normal)
 
-        isect = Intersection(ray=ray, distance=root,ipoint=ray.evaluate(root),
-                             normal=(ray.evaluate(root)-self.center)/self.radius,obj=self)
         return True, isect
 
 
@@ -86,7 +88,7 @@ class Sphere:
         #     t2 = (-b - np.sqrt(delta)) / 2
         # if t1 > 0 and t2 > 0:
         #     return min(t1, t2)
-        return None
+        # return None
 
     def normal(self, ipoint: Vector):
         """Returns surface normal to the ipoint on sphere's surface"""

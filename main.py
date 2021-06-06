@@ -13,7 +13,7 @@ from material import Material
 from objects.sphere import Sphere
 from ray import Ray
 from scene import Scene
-from utils.color import Color, Colors
+from utils.color import Colors
 from utils.vector import Vector
 from utils.image import Image
 
@@ -37,10 +37,12 @@ def main1():
         engine.render_multiprocess(scene, process_count, img_fileobj)
 
 def main():
-    settings = Settings(samples=10)
+    settings = Settings(samples=1)
     camera = Camera()
-    objs = [Sphere(Vector(0, 0, -1), 0.5, Material(Colors.Red))]
-    scene = Scene(settings,camera,None,None)
+    objs = [Sphere(Vector(0, 0, -1), 0.5, Material(Colors.Red)),
+            Sphere(Vector(0,-100.5,-1),100, Material(Colors.Green))
+            ]
+    scene = Scene(settings,camera,objs,None)
 
 
 

@@ -1,6 +1,7 @@
+from ray import Ray
 from utils.color import Color, Colors
 from utils.funcs import *
-
+from utils.vector import Vector
 
 class Finish:
     """Finish is how the reaction to light coupled with a Material"""
@@ -37,15 +38,20 @@ class Material:
             color=Color.from_hex("#FFFFFF"),
             finish: Finish = Finish(), modifiers=None
     ):
-        if modifiers is None:
-            modifiers = dict()
+        
         self.color = color
         self.finish = finish
         self.modifiers = modifiers
 
-    def color_at(self, ray, position):
+    def color_at(self, ray=None, isect=None, position=None):
         if self.modifiers is None:
-            return self.color
+            scatter_direction = isect.normal + Vector.random_unit_vector()
+            if scatter_direction.near_zero():
+                scatter_direction = isect.normal
+
+            s_ray = Ray(isect.point, scatter_direction)
+            attenuation = self.color
+            return True, attenuation, s_ray
 
     def compute_specular(self, light, ray, normal, relative_ior):
         light_color = light.color
